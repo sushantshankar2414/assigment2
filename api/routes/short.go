@@ -39,11 +39,11 @@ func ShortUrl(c *fiber.Ctx) error{
 			return c.Status(fiber.StatusServiceUnavailable).JSON(fiber.Map{"error":"Rate limit excedded"})
 		}
 	}
-
+// validating the url
 	if !govalidator.IsURL(body.Url){
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error":"invalid url"})
 	}
-
+// incountered all the domain error
 	if !helpers.DomainError(body.Url) {
 		return c.Status(fiber.StatusServiceUnavailable).JSON(fiber.Map{"error":"domain is incorrect"})
 	}
@@ -59,12 +59,14 @@ func ShortUrl(c *fiber.Ctx) error{
 		body.Expiry = 24
 	}
 	r.Decr(database.Ctx,c.IP())
+    // passing the response
 	resp := response{
 		Url: body.Url,
 		ShortUrl : "",
 		Expiry : body.Expiry,
 		ShortLinkRemaining : 2000,
 	}
+    
 	val1,_ := r2.Get(database.Ctx,c.IP()).Result()
 	resp.ShortLinkRemaining,_ = strconv.Atoi(val1) 
 	resp.ShortUrl = os.Getenv("DOMAIN") + "/" + id

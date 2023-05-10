@@ -15,6 +15,7 @@ func DomainError(url string) bool{
 	if url == os.Getenv("DOMAIN"){
 		 return false
 	}
+    // #to remove all the dependencies which url faces
 	generatedUrl := strings.Replace(url,"http://","",1)
 	generatedUrl = strings.Replace(generatedUrl,"https://","",1)
 	generatedUrl = strings.Replace(generatedUrl,"www.","",1)
